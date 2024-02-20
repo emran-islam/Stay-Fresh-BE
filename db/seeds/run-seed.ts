@@ -1,11 +1,11 @@
-// const devData = require("../data/development-data/index.ts");
-const seedOne = require("./seed.ts");
-const connection = require("../connection.ts");
+import devData from "../data/development-data/index";
+import seedOne from "./seed";
+import connection from "../connection";
 
 const runSeed = () => {
-  return seedOne().then(() => connection.end());
+  console.log(devData);
+
+  return seedOne(devData).then(() => connection.end());
 };
 
 runSeed();
-
-// seedOne().then(() => {connection.end()});
