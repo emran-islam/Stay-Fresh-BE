@@ -3,8 +3,6 @@ import seedOne from "./seed";
 import connection from "../connection";
 
 const runSeed = () => {
-  console.log(devData);
-
   return seedOne(devData).then(() => connection.end());
 };
 
