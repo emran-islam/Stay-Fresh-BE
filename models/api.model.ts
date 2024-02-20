@@ -1,10 +1,5 @@
-import endpoints from "../endpoints.json"
+import endpointsData from '../endpoints.json'
 
-
-
-
-exports.fetchEndPoints = () => {
-    return 
-
-
+export function fetchEndPoints() {
+    return endpointsData;
 }
