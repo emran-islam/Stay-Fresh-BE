@@ -2,12 +2,14 @@
   "name": "stay-fresh-be",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "listen.ts",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "dev": "ts-node src/index.ts",
     "test": "jest",
-    "seed": "node ./db/seeds/run-seed.ts"
+    "seed": "ts-node ./db/seeds/run-seed.ts",
+    "start": "ts-node listen.ts",
+    "seed-prod": "NODE_ENV=production npm run seed"
   },
   "keywords": [],
   "author": "",

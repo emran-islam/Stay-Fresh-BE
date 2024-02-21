@@ -40,6 +40,13 @@ const items: {
     expiry_date: "Tue Mar 19 2024 19:33:50 GMT+0100",
     home_id: 2,
   },
+  {
+    item_name: "Cheese",
+    item_price: 350,
+    purchase_date: "Sun Feb 18 2024 19:33:50 GMT+0100",
+    expiry_date: "Tue Mar 19 2024 19:33:50 GMT+0100",
+    home_id: 2,
+  },
 ];
 
 export default items;
