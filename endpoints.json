@@ -59,5 +59,27 @@
         "item_status": "ACTIVE"
       }
     }
+  },
+  "PATCH /api/items/:item_id": {
+    "description": "updates and item based on item id, can update one or more fields",
+    "queries": [],
+    "requestFormat": {
+      "item_name": "cheese",
+      "item_price": 300,
+      "purchase_date": "2024-02-21T19:33:50.000Z",
+      "expiry_date": "2024-03-21T19:33:50.000Z",
+      "item_status": "USED"
+    },
+    "exampleResponse": {
+      "item": {
+        "item_id": 1,
+        "item_name": "cheese",
+        "item_price": 300,
+        "purchase_date": "2024-02-21T19:33:50.000Z",
+        "expiry_date": "2024-03-21T19:33:50.000Z",
+        "home_id": 1,
+        "item_status": "USED"
+      }
+    }
   }
 }

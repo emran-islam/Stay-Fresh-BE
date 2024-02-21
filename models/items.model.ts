@@ -15,7 +15,7 @@ export function updateItembyId(item_id, updateItem) {
     updateQuery += ` ${key} = $${queryArray.length},`;
   }
 
-  let slicedUpdateQuery = updateQuery.slice(0, -1);
+  let slicedUpdateQuery = queryArray.length > 0 ? updateQuery.slice(0, -1) : updateQuery;
 
   slicedUpdateQuery += ` WHERE item_id = $${
     queryArray.length + 1

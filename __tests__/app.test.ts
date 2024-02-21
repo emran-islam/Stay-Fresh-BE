@@ -221,7 +221,7 @@ describe("/api", () => {
   });
 
   describe("PATCH/api/items/:item_id", () => {
-    test("update item by its id ", () => {
+    test("PATCH 200: update item by its id ", () => {
       const updatedItem = {
         item_name: "cheese",
         item_price: 300,
@@ -247,7 +247,7 @@ describe("/api", () => {
         });
     });
 
-    test("update item by a single field ", () => {
+    test("PATCH 200: update item by a single field ", () => {
       const updatedItem = {
         item_status: "USED",
       };
@@ -268,6 +268,57 @@ describe("/api", () => {
           });
         });
     });
+
+    test("PATCH 400: will respond with appropriate error message and status if request body field has wrong data type ", () => {
+      const updatedItem = {
+        item_name: "cheese",
+        item_price: "three hundred",
+        purchase_date: "2024-02-21T19:33:50.000Z",
+        expiry_date: "2024-03-21T19:33:50.000Z",
+        item_status: "USED",
+      };
+      return request(app)
+        .patch("/api/items/1")
+        .send(updatedItem)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+
+    test("PATCH 400: will respond with appropriate error message and status if request body is empty", () => {
+      const updatedItem = {};
+      return request(app)
+        .patch("/api/items/1")
+        .send(updatedItem)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+
+    test("PATCH 400: will respond with appropriate error message and status if item id is not valid", () => {
+      const updatedItem = {};
+      return request(app)
+        .patch("/api/items/nonsense")
+        .send(updatedItem)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+
+    test("PATCH 404: will respond with appropriate error message and status if item id is valid but non existent", () => {
+      const updatedItem = {};
+      return request(app)
+        .patch("/api/items/99999")
+        .send(updatedItem)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("item does not exist");
+        });
+    });
+
   });
 });
 

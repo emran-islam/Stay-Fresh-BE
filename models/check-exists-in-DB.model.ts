@@ -2,7 +2,7 @@ import db from "../db/connection";
 import format from "pg-format";
 
 export function checkExistsInDB(table, column, value) {
-  const lookup = { homes: "home" };
+  const lookup = { homes: "home", items: "item" };
   const queryString = format("SELECT * FROM %I WHERE %I = $1", table, column);
 
   return db.query(queryString, [value]).then(({ rows }) => {
