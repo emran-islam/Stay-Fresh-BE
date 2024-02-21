@@ -100,5 +100,23 @@ describe("/api", () => {
           });
         });
     });
+
+    test("404: send an appropiate error message when sending a valid but non existent home id", () => {
+      return request(app)
+        .get("/api/homes/999999/items")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("home does not exist");
+        });
+    });
+
+    test("400: send an appropiate error message when sending a invalid home id", () => {
+      return request(app)
+        .get("/api/homes/nonsense/items")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
   });
 });
