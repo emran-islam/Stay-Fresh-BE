@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { getEndpoints } from "./controllers/api.controller";
 import { getItems, patchItemById } from "./controllers/items.controller";
 import {
@@ -13,7 +14,10 @@ import {
   postItemByHomeId,
 } from "./controllers/homes.controller";
 
+
+
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.get("/api", getEndpoints);
