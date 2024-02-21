@@ -1,6 +1,6 @@
 import express from "express";
 import { getEndpoints } from "./controllers/api.controller";
-import { getItems } from "./controllers/items.controller";
+import { getItems, patchItemById } from "./controllers/items.controller";
 import {
   handleInvalidEndpoint,
   handleServerErrors,
@@ -21,6 +21,7 @@ app.get("/api/items", getItems);
 app.get("/api/homes", getHomes);
 app.get("/api/homes/:home_id/items", getItemsByHomeId);
 app.post("/api/homes/:home_id/items", postItemByHomeId);
+app.patch("/api/items/:item_id", patchItemById)
 
 
 app.all("/*", handleInvalidEndpoint);

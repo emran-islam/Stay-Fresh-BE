@@ -3,6 +3,7 @@ import seedOne from "../db/seeds/seed";
 import connection from "../db/connection";
 import request from "supertest";
 import app from "../app";
+import { describe } from "node:test";
 
 beforeEach(() => {
   return seedOne(testData);
@@ -188,39 +189,87 @@ describe("/api", () => {
         });
     });
 
-        test("POST 400: will return appropriate error message and status if home id is invalid", () => {
-          return request(app)
-            .post("/api/homes/nonsense/items")
-            .send({
-              item_name: "cheese",
-              item_price: 300,
-              purchase_date: "2024-02-21T19:33:50.000Z",
-              expiry_date: "2024-03-21T19:33:50.000Z",
-            })
-            .expect(400)
-            .then(({ body }) => {
-              expect(body.msg).toBe("bad request");
-            });
+    test("POST 400: will return appropriate error message and status if home id is invalid", () => {
+      return request(app)
+        .post("/api/homes/nonsense/items")
+        .send({
+          item_name: "cheese",
+          item_price: 300,
+          purchase_date: "2024-02-21T19:33:50.000Z",
+          expiry_date: "2024-03-21T19:33:50.000Z",
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
         });
+    });
 
-                test("POST 404: will return appropriate error message and status if home id is valid but non-existent", () => {
-                  return request(app)
-                    .post("/api/homes/9999/items")
-                    .send({
-                      item_name: "cheese",
-                      item_price: 300,
-                      purchase_date: "2024-02-21T19:33:50.000Z",
-                      expiry_date: "2024-03-21T19:33:50.000Z",
-                    })
-                    .expect(404)
-                    .then(({ body }) => {
-                      expect(body.msg).toBe("home does not exist");
-                    });
-                });
-
-
-
+    test("POST 404: will return appropriate error message and status if home id is valid but non-existent", () => {
+      return request(app)
+        .post("/api/homes/9999/items")
+        .send({
+          item_name: "cheese",
+          item_price: 300,
+          purchase_date: "2024-02-21T19:33:50.000Z",
+          expiry_date: "2024-03-21T19:33:50.000Z",
+        })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("home does not exist");
+        });
+    });
   });
 
+  describe("PATCH/api/items/:item_id", () => {
+    test("update item by its id ", () => {
+      const updatedItem = {
+        item_name: "cheese",
+        item_price: 300,
+        purchase_date: "2024-02-21T19:33:50.000Z",
+        expiry_date: "2024-03-21T19:33:50.000Z",
+        item_status: "USED",
+      };
+      return request(app)
+        .patch("/api/items/1")
+        .send(updatedItem)
+        .expect(200)
+        .then((response) => {
+          expect(typeof response.body.item).toBe("object");
+          expect(response.body.item).toEqual({
+            item_id: 1,
+            item_name: "cheese",
+            item_price: 300,
+            purchase_date: "2024-02-21T19:33:50.000Z",
+            expiry_date: "2024-03-21T19:33:50.000Z",
+            item_status: "USED",
+            home_id: 1,
+          });
+        });
+    });
 
+    test("update item by a single field ", () => {
+      const updatedItem = {
+        item_status: "USED",
+      };
+      return request(app)
+        .patch("/api/items/1")
+        .send(updatedItem)
+        .expect(200)
+        .then((response) => {
+          expect(typeof response.body.item).toBe("object");
+          expect(response.body.item).toEqual({
+            item_id: 1,
+            item_name: "Milk",
+            item_price: 155,
+            purchase_date: "2024-02-20T19:33:50.000Z",
+            expiry_date: "2024-02-27T19:33:50.000Z",
+            item_status: "USED",
+            home_id: 1,
+          });
+        });
+    });
+  });
 });
+
+// 2. get items based on status
+// 3. sort items by expiry date
