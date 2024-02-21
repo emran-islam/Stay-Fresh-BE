@@ -9,13 +9,55 @@
     "description": "serves up a json representation of all the available items",
     "queries": [],
     "requestFormat": {},
-    "exampleResponse": {"items": [{
-        "item_id": 1,
-        "item_name": "Milk",
-        "item_price": 155,
-        "purchase_date": "2024-02-20T19:33:50.000Z",
-        "expiry_date": "2024-02-27T19:33:50.000Z",
-        "home_id": 1
-      }]}
+    "exampleResponse": {
+      "items": [
+        {
+          "item_id": 1,
+          "item_name": "Milk",
+          "item_price": 155,
+          "purchase_date": "2024-02-20T19:33:50.000Z",
+          "expiry_date": "2024-02-27T19:33:50.000Z",
+          "home_id": 1
+        }
+      ]
+    }
+  },
+  "GET /api/homes/:home_id/items": {
+    "description": "serves up a json representation of all the available items for a specific home",
+    "queries": [],
+    "requestFormat": {},
+    "exampleResponse": {
+      "items": [
+        {
+          "item_id": 1,
+          "item_name": "Milk",
+          "item_price": 155,
+          "purchase_date": "2024-02-20T19:33:50.000Z",
+          "expiry_date": "2024-02-27T19:33:50.000Z",
+          "home_id": 1
+        }
+      ]
+    }
+  },
+  "POST /api/homes/:home_id/items": {
+    "description": "adds a new item for a specific home",
+    "queries": [],
+    "requestFormat": {
+      "item_name": "cheese",
+      "item_price": 300,
+      "purchase_date": "2024-02-21T19:33:50.000Z",
+      "expiry_date": "2024-03-21T19:33:50.000Z"
+    },
+    "exampleResponse": {
+      "item": {
+        "item_id": 6,
+        "item_name": "cheese",
+        "item_price": 300,
+        "purchase_date": "2024-02-21T19:33:50.000Z",
+        "expiry_date": "2024-03-21T19:33:50.000Z",
+        "home_id": 1,
+        "item_status": "ACTIVE"
+      }
+    }
   }
 }

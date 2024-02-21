@@ -60,6 +60,7 @@ describe("/api", () => {
             expect(typeof item.purchase_date).toBe("string");
             expect(typeof item.expiry_date).toBe("string");
             expect(typeof item.home_id).toBe("number");
+            expect(typeof item.item_status).toBe("string");
           });
         });
     });
@@ -96,6 +97,7 @@ describe("/api", () => {
             expect(typeof item.purchase_date).toBe("string");
             expect(typeof item.expiry_date).toBe("string");
             expect(typeof item.home_id).toBe("number");
+            expect(typeof item.item_status).toBe("string");
             expect(item.home_id).toBe(1);
           });
         });
@@ -119,4 +121,106 @@ describe("/api", () => {
         });
     });
   });
+
+  describe("POST /homes/:home_id/items", () => {
+    test("POST 201: adds a new item for an home", () => {
+      return request(app)
+        .post("/api/homes/1/items")
+        .send({
+          item_name: "cheese",
+          item_price: 300,
+          purchase_date: "2024-02-21T19:33:50.000Z",
+          expiry_date: "2024-03-21T19:33:50.000Z",
+        })
+        .expect(201)
+        .then(({ body }) => {
+          const item = body.item;
+          expect(item.item_id).toBe(6);
+          expect(item.item_name).toBe("cheese");
+          expect(item.item_price).toBe(300);
+          expect(item.purchase_date).toBe("2024-02-21T19:33:50.000Z");
+          expect(item.expiry_date).toBe("2024-03-21T19:33:50.000Z");
+          expect(item.home_id).toBe(1);
+          expect(item.item_status).toBe("ACTIVE");
+        });
+    });
+    test("POST 400: will return appropriate error message and status if request body is missing mandatory parameters", () => {
+      return request(app)
+        .post("/api/homes/1/items")
+        .send({
+          item_price: 300,
+          purchase_date: "2024-02-21T19:33:50.000Z",
+          expiry_date: "2024-03-21T19:33:50.000Z",
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+
+    test("POST 400: will return appropriate error message and status if request body has purchase price in wrong format", () => {
+      return request(app)
+        .post("/api/homes/1/items")
+        .send({
+          item_name: "cheese",
+          item_price: "three hundred",
+          purchase_date: "2024-02-21T19:33:50.000Z",
+          expiry_date: "2024-03-21T19:33:50.000Z",
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+
+    test("POST 400: will return appropriate error message and status if request body has date in wrong format", () => {
+      return request(app)
+        .post("/api/homes/1/items")
+        .send({
+          item_name: "cheese",
+          item_price: 300,
+          purchase_date: "1st Feb 2024",
+          expiry_date: "2024-03-21T19:33:50.000Z",
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("invalid timestamp");
+        });
+    });
+
+        test("POST 400: will return appropriate error message and status if home id is invalid", () => {
+          return request(app)
+            .post("/api/homes/nonsense/items")
+            .send({
+              item_name: "cheese",
+              item_price: 300,
+              purchase_date: "2024-02-21T19:33:50.000Z",
+              expiry_date: "2024-03-21T19:33:50.000Z",
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).toBe("bad request");
+            });
+        });
+
+                test("POST 404: will return appropriate error message and status if home id is valid but non-existent", () => {
+                  return request(app)
+                    .post("/api/homes/9999/items")
+                    .send({
+                      item_name: "cheese",
+                      item_price: 300,
+                      purchase_date: "2024-02-21T19:33:50.000Z",
+                      expiry_date: "2024-03-21T19:33:50.000Z",
+                    })
+                    .expect(404)
+                    .then(({ body }) => {
+                      expect(body.msg).toBe("home does not exist");
+                    });
+                });
+
+
+
+  });
+
+
 });

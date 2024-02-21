@@ -7,7 +7,11 @@ import {
   handleCustomErrors,
   handlePsqlErrors,
 } from "./errors";
-import { getHomes, getItemsByHomeId } from "./controllers/homes.controller";
+import {
+  getHomes,
+  getItemsByHomeId,
+  postItemByHomeId,
+} from "./controllers/homes.controller";
 
 const app = express();
 app.use(express.json());
@@ -16,6 +20,8 @@ app.get("/api", getEndpoints);
 app.get("/api/items", getItems);
 app.get("/api/homes", getHomes);
 app.get("/api/homes/:home_id/items", getItemsByHomeId);
+app.post("/api/homes/:home_id/items", postItemByHomeId);
+
 
 app.all("/*", handleInvalidEndpoint);
 app.use(handleCustomErrors);

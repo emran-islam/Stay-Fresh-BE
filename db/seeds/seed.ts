@@ -42,7 +42,8 @@ export default function seed(data: dataObject) {
       item_price INT NOT NULL,
       purchase_date TIMESTAMP NOT NULL,
       expiry_date TIMESTAMP NOT NULL,
-      home_id INT REFERENCES homes(home_id) NOT NULL
+      home_id INT REFERENCES homes(home_id) NOT NULL,
+      item_status VARCHAR DEFAULT 'ACTIVE' NOT NULL
       );`);
     })
     .then(() => {

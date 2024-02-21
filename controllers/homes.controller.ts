@@ -1,4 +1,8 @@
-import { fetchHomes, fetchItemsByHomeId } from "../models/homes.model";
+import {
+  fetchHomes,
+  fetchItemsByHomeId,
+  addItemByHomeId,
+} from "../models/homes.model";
 
 import { checkExistsInDB } from "../models/check-exists-in-DB.model";
 
@@ -26,4 +30,21 @@ export function getItemsByHomeId(req, res, next) {
     .catch((err) => {
       next(err);
     });
+}
+
+export function postItemByHomeId(req, res, next) {
+    const { home_id } = req.params;
+      const newItem = req.body;
+
+    const homeExistenceQuery = checkExistsInDB("homes", "home_id", home_id);
+
+    const addItemByHomeIdQuery = addItemByHomeId(newItem, home_id);
+
+    Promise.all([addItemByHomeIdQuery, homeExistenceQuery])
+      .then((response) => {
+        res.status(201).send({ item: response[0] });
+      })
+      .catch((err) => {
+        next(err);
+      });
 }
