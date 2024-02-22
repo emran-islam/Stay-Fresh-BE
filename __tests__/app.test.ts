@@ -434,4 +434,102 @@ describe("/api", () => {
         });
     });
   });
+
+  describe("GET /users", () => {
+    test("GET 200: Returns an array of all users", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+          const { users } = body;
+          expect(users.length > 0).toBe(true);
+          users.forEach((user) => {
+            expect(typeof user.user_id).toBe("number");
+            expect(typeof user.user_name).toBe("string");
+            expect(typeof user.home_id).toBe("number");
+          });
+        });
+    });
+  });
+
+  describe("DELETE /item/:item_id", () => {
+    test("DELETE 204: Deletes an item", () => {
+      return request(app).delete("/api/items/1").expect(204);
+    });
+
+    test("DELETE 400: Responds with error message and status when given an invalid item id", () => {
+      return request(app)
+        .delete("/api/items/nonsense")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+
+    test("DELETE 404: Responds with error message and status when given an valid but non existent item id", () => {
+      return request(app)
+        .delete("/api/items/9999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("item does not exist");
+        });
+    });
+  });
+
+  describe.only("POST /users", () => {
+    test("POST 201: Adds a new user", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          user_name: "marksmith123",
+          home_id: 1,
+        })
+        .expect(201)
+        .then(({ body }) => {
+          const user = body.user;
+          expect(user.user_id).toBe(3);
+          expect(user.user_name).toBe("marksmith123");
+          expect(user.home_id).toBe(1);
+        });
+    });
+
+    test("POST 400: Will return error message and status when request body is missing mandatory parameters", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          home_id: 1,
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+
+    test("POST 400: Will return error message and status when home id is not valid", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          user_name: "marksmith123",
+          home_id: "rubbish",
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+
+    test("POST 404: Will return error message and status when home id is valid but not existing", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          user_name: "marksmith123",
+          home_id: 100,
+        })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("home does not exist");
+        });
+    });
+
+  });
 });

@@ -1,4 +1,8 @@
-import { fetchItems, updateItembyId } from "../models/items.model";
+import {
+  fetchItems,
+  updateItembyId,
+  removeItemById,
+} from "../models/items.model";
 import { checkExistsInDB } from "../models/check-exists-in-DB.model";
 
 
@@ -27,6 +31,25 @@ export function patchItemById(req, res, next) {
       res.status(200).send({ item: response[0]});
     })
     .catch((err) => {
+      next(err);
+    });
+}
+
+
+export function deleteItemById(req, res, next) {
+
+    const { item_id } = req.params;
+
+  const itemExistenceQuery = checkExistsInDB("items", "item_id", item_id);
+
+const removeItemByIdQuery = removeItemById(item_id);
+
+  Promise.all([removeItemByIdQuery, itemExistenceQuery])
+    .then((items) => {
+      res.status(204).send();
+    })
+    .catch((err) => {
+      console.log(err);
       next(err);
     });
 }

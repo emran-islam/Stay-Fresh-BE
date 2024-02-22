@@ -27,3 +27,12 @@ export function updateItembyId(item_id, updateItem) {
     return result.rows[0];
   });
 }
+
+
+export function removeItemById(item_id) {
+  return db
+    .query(`DELETE FROM items WHERE item_id = $1 RETURNING *;`, [item_id])
+    .then((result) => {
+      return result.rows;
+    });
+}
