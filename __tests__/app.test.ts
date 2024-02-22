@@ -325,11 +325,11 @@ describe("/api", () => {
       return request(app)
         .get("/api/homes/1/items")
         .expect(200)
-        .then(({body}) => {
+        .then(({ body }) => {
           const { items } = body;
-          expect(items.length > 0).toBe(true)
-          for (let i = 1; i<items.length; i++) {
-            expect(items[i].expiry_date > items[i-1].expiry_date).toBe(true)
+          expect(items.length > 0).toBe(true);
+          for (let i = 1; i < items.length; i++) {
+            expect(items[i].expiry_date > items[i - 1].expiry_date).toBe(true);
           }
         });
     });
@@ -385,17 +385,14 @@ describe("/api", () => {
         });
     });
 
-        test("GET 404: sends appropriate error status and message when given a valid but not existent item name to check", () => {
-          return request(app)
-            .get("/api/expiries/beans")
-            .expect(404)
-            .then(({ body }) => {
-              expect(body.msg).toBe("expiry item does not exist");
-            });
+    test("GET 404: sends appropriate error status and message when given a valid but not existent item name to check", () => {
+      return request(app)
+        .get("/api/expiries/beans")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("expiry item does not exist");
         });
-
-
-
+    });
   });
 
   describe("GET /homes/:home_id/items?item_status=status_query", () => {
@@ -416,6 +413,24 @@ describe("/api", () => {
             expect(item.home_id).toBe(2);
             expect(item.item_status).toBe("ACTIVE");
           });
+        });
+    });
+    test("GET 200: Will return empty array when given a valid status but home has no items of that status", () => {
+      return request(app)
+        .get("/api/homes/1/items?item_status=USED")
+        .expect(200)
+        .then(({ body }) => {
+          const { items } = body;
+          expect(items).toEqual([]);
+        });
+    });
+
+    test("GET 400: Will return an error message when given a invalid status", () => {
+      return request(app)
+        .get("/api/homes/1/items?item_status=NONSENSE")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("invalid status query");
         });
     });
   });

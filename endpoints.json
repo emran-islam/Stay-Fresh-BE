@@ -17,14 +17,15 @@
           "item_price": 155,
           "purchase_date": "2024-02-20T19:33:50.000Z",
           "expiry_date": "2024-02-27T19:33:50.000Z",
-          "home_id": 1
+          "home_id": 1,
+          "item_status": "ACTIVE"
         }
       ]
     }
   },
   "GET /api/homes/:home_id/items": {
     "description": "serves up a json representation of all the available items for a specific home",
-    "queries": [],
+    "queries": ["item_status"],
     "requestFormat": {},
     "exampleResponse": {
       "items": [
@@ -34,7 +35,8 @@
           "item_price": 155,
           "purchase_date": "2024-02-20T19:33:50.000Z",
           "expiry_date": "2024-02-27T19:33:50.000Z",
-          "home_id": 1
+          "home_id": 1,
+          "item_status": "ACTIVE"
         }
       ]
     }
