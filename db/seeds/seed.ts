@@ -11,6 +11,7 @@ type dataObject = {
     expiry_date: string;
     home_id: number;
   }[];
+  expiriesData: { item_name: string; shelf_life: number }[];
 };
 
 export default function seed(data: dataObject) {
@@ -21,6 +22,9 @@ export default function seed(data: dataObject) {
     })
     .then(() => {
       return connectionOne.query("DROP TABLE IF EXISTS homes");
+    })
+    .then(() => {
+      return connectionOne.query("DROP TABLE IF EXISTS expiries");
     })
     .then(() => {
       return connectionOne.query(`CREATE TABLE homes (
@@ -47,6 +51,12 @@ export default function seed(data: dataObject) {
       );`);
     })
     .then(() => {
+      return connectionOne.query(`CREATE TABLE expiries(
+        item_name VARCHAR PRIMARY KEY,
+        shelf_life INT NOT NULL
+        );`);
+    })
+    .then(() => {
       const insertHomesQueryStr = format(
         "INSERT INTO homes (home_name) VALUES %L;",
         data.homesData.map((home) => [home.home_name])
@@ -59,17 +69,25 @@ export default function seed(data: dataObject) {
         data.usersData.map((user) => [user.user_name, user.home_id])
       );
       return connectionOne.query(insertUsersQueryStr);
-    }).then(()=>{
-         const insertItemsQueryStr = format(
-           "INSERT INTO items (item_name, item_price, purchase_date, expiry_date, home_id) VALUES %L;",
-           data.itemsData.map((item) => [
-             item.item_name,
-             item.item_price,
-             item.purchase_date,
-             item.expiry_date,
-             item.home_id,
-           ])
-         );
-         return connectionOne.query(insertItemsQueryStr);
+    })
+    .then(() => {
+      const insertItemsQueryStr = format(
+        "INSERT INTO items (item_name, item_price, purchase_date, expiry_date, home_id) VALUES %L;",
+        data.itemsData.map((item) => [
+          item.item_name,
+          item.item_price,
+          item.purchase_date,
+          item.expiry_date,
+          item.home_id,
+        ])
+      );
+      return connectionOne.query(insertItemsQueryStr);
+    })
+    .then(() => {
+      const insertExpiriesQueryStr = format(
+        "INSERT INTO expiries (item_name, shelf_life) VALUES %L;",
+        data.expiriesData.map((item) => [item.item_name, item.shelf_life])
+      );
+      return connectionOne.query(insertExpiriesQueryStr);
     });
 }

@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { getEndpoints } from "./controllers/api.controller";
 import { getItems, patchItemById } from "./controllers/items.controller";
+import { getExpiries } from "./controllers/expiries.controller";
 import {
   handleInvalidEndpoint,
   handleServerErrors,
@@ -14,8 +15,6 @@ import {
   postItemByHomeId,
 } from "./controllers/homes.controller";
 
-
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -23,10 +22,10 @@ app.use(express.json());
 app.get("/api", getEndpoints);
 app.get("/api/items", getItems);
 app.get("/api/homes", getHomes);
+app.get("/api/expiries", getExpiries);
 app.get("/api/homes/:home_id/items", getItemsByHomeId);
 app.post("/api/homes/:home_id/items", postItemByHomeId);
-app.patch("/api/items/:item_id", patchItemById)
-
+app.patch("/api/items/:item_id", patchItemById);
 
 app.all("/*", handleInvalidEndpoint);
 app.use(handleCustomErrors);

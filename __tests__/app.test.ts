@@ -318,9 +318,47 @@ describe("/api", () => {
           expect(body.msg).toBe("item does not exist");
         });
     });
+  });
 
+  // describe("GET /homes/:home_id/items", () => {
+  //   test("should get all items by expiry date in descending order", () => {
+  //     return request(app)
+  //       .get("/api/homes/1/items")
+  //       .expect(200)
+  //       .then((res) => {
+  //         const { items } = res.body;
+  //         expect(Array.isArray(items)).toBe(true);
+
+  //         expect(items).toBeSortedBy({ key: "expiry_date", descending: true });
+
+  //         expect(items.length > 0).toBe(true);
+
+  //         items.forEach((item) => {
+  //           expect(item.item_id).toBe("number");
+  //           expect(item.item_name).toBe("string");
+  //           expect(item.item_price).toBe("number");
+  //           expect(item.purchase_date).toBe("string");
+  //           expect(item.expiry_date).toBe("string");
+  //           expect(item.home_id).toBe("number");
+  //           expect(item.item_status).toBe("string");
+  //         });
+  //       });
+  //   });
+  // });
+
+  describe("GET /expiries", () => {
+    test("GET 200: sends an array of all expiries", () => {
+      return request(app)
+        .get("/api/expiries")
+        .expect(200)
+        .then(({ body }) => {
+          const { expiries } = body;
+          expect(expiries.length > 0).toBe(true);
+          expiries.forEach((item) => {
+            expect(typeof item.item_name).toBe("string");
+            expect(typeof item.shelf_life).toBe("number");
+          });
+        });
+    });
   });
 });
-
-// 2. get items based on status
-// 3. sort items by expiry date
