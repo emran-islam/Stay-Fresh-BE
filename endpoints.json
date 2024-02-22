@@ -146,5 +146,20 @@
         }
       ]
     }
+  },
+  "POST /api/homes": {
+    "description": "adds a new user to the given home",
+    "queries": [],
+    "requestFormat": {
+      "homes_name": "Williams Family"
+    },
+    "exampleResponse": {
+      "items": [
+        {
+          "home_id": 3,
+          "homes_name": "Williams Family"
+        }
+      ]
+    }
   }
 }
