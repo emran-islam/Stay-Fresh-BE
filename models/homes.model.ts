@@ -1,4 +1,5 @@
 import db from "../db/connection";
+import homes from "../db/data/test-data/homes";
 // import items from "../db/data/test-data/items";
 
 export function fetchHomes() {
@@ -55,6 +56,19 @@ export function addItemByHomeId(newItem, home_id) {
         newItem.expiry_date,
         home_id,
       ]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+}
+
+export function addHome(newHome) {
+  return db
+    .query(
+      `INSERT INTO homes
+    (home_name) 
+    VALUES ($1) RETURNING *`,
+      [newHome.home_name]
     )
     .then(({ rows }) => {
       return rows[0];

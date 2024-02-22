@@ -2,6 +2,7 @@ import {
   fetchHomes,
   fetchItemsByHomeId,
   addItemByHomeId,
+  addHome,
 } from "../models/homes.model";
 
 import { checkExistsInDB } from "../models/check-exists-in-DB.model";
@@ -44,6 +45,19 @@ export function postItemByHomeId(req, res, next) {
   Promise.all([addItemByHomeIdQuery, homeExistenceQuery])
     .then((response) => {
       res.status(201).send({ item: response[0] });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+export function postHome(req, res, next) {
+  const newHome = req.body;
+  addHome(newHome)
+    .then((home) => {
+      console.log(home);
+
+      res.status(201).send({ home });
     })
     .catch((err) => {
       next(err);

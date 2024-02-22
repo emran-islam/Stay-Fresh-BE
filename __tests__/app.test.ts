@@ -476,7 +476,7 @@ describe("/api", () => {
     });
   });
 
-  describe.only("POST /users", () => {
+  describe("POST /users", () => {
     test("POST 201: Adds a new user", () => {
       return request(app)
         .post("/api/users")
@@ -530,6 +530,30 @@ describe("/api", () => {
           expect(body.msg).toBe("home does not exist");
         });
     });
+  });
+});
 
+describe("POST /homes", () => {
+  test("POST 201: Adds a new home", () => {
+    return request(app)
+      .post("/api/homes")
+      .send({
+        home_name: "Peterson Family",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        const home = body.home;
+        expect(home.home_name).toBe("Peterson Family");
+      });
+  });
+
+  test("POST 400: Will return error message and status when home name is not included", () => {
+    return request(app)
+      .post("/api/homes")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
   });
 });

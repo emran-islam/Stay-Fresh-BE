@@ -21,6 +21,7 @@ import {
   getHomes,
   getItemsByHomeId,
   postItemByHomeId,
+  postHome,
 } from "./controllers/homes.controller";
 
 const app = express();
@@ -38,7 +39,7 @@ app.get("/api/homes/:home_id/items", getItemsByHomeId);
 
 app.post("/api/homes/:home_id/items", postItemByHomeId);
 app.post("/api/users", postUser);
-
+app.post("/api/homes", postHome);
 
 app.patch("/api/items/:item_id", patchItemById);
 
