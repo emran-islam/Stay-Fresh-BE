@@ -1,6 +1,6 @@
 const expiries: { item_name: string; shelf_life: number }[] = [
   {
-    item_name: "Banana",
+    item_name: "Bananas",
     shelf_life: 7,
   },
 
@@ -35,7 +35,7 @@ const expiries: { item_name: string; shelf_life: number }[] = [
   },
 
   {
-    item_name: "Potato",
+    item_name: "Potatoes",
     shelf_life: 8,
   },
 ];

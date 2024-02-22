@@ -11,7 +11,7 @@ export function fetchItemsByHomeId(home_id) {
   return db
     .query(
       `SELECT * FROM items 
-    WHERE home_id = $1;`,
+    WHERE home_id = $1 ORDER BY expiry_date ASC;`,
       [home_id]
     )
     .then((result) => {

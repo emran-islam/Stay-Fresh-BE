@@ -104,7 +104,7 @@ describe("/api", () => {
         });
     });
 
-    test("404: send an appropiate error message when sending a valid but non existent home id", () => {
+    test("404: send an appropriate error message when sending a valid but non existent home id", () => {
       return request(app)
         .get("/api/homes/999999/items")
         .expect(404)
@@ -113,7 +113,7 @@ describe("/api", () => {
         });
     });
 
-    test("400: send an appropiate error message when sending a invalid home id", () => {
+    test("400: send an appropriate error message when sending a invalid home id", () => {
       return request(app)
         .get("/api/homes/nonsense/items")
         .expect(400)
@@ -136,7 +136,7 @@ describe("/api", () => {
         .expect(201)
         .then(({ body }) => {
           const item = body.item;
-          expect(item.item_id).toBe(6);
+          expect(item.item_id).toBe(8);
           expect(item.item_name).toBe("cheese");
           expect(item.item_price).toBe(300);
           expect(item.purchase_date).toBe("2024-02-21T19:33:50.000Z");
@@ -320,31 +320,20 @@ describe("/api", () => {
     });
   });
 
-  // describe("GET /homes/:home_id/items", () => {
-  //   test("should get all items by expiry date in descending order", () => {
-  //     return request(app)
-  //       .get("/api/homes/1/items")
-  //       .expect(200)
-  //       .then((res) => {
-  //         const { items } = res.body;
-  //         expect(Array.isArray(items)).toBe(true);
-
-  //         expect(items).toBeSortedBy({ key: "expiry_date", descending: true });
-
-  //         expect(items.length > 0).toBe(true);
-
-  //         items.forEach((item) => {
-  //           expect(item.item_id).toBe("number");
-  //           expect(item.item_name).toBe("string");
-  //           expect(item.item_price).toBe("number");
-  //           expect(item.purchase_date).toBe("string");
-  //           expect(item.expiry_date).toBe("string");
-  //           expect(item.home_id).toBe("number");
-  //           expect(item.item_status).toBe("string");
-  //         });
-  //       });
-  //   });
-  // });
+  describe("GET /homes/:home_id/items", () => {
+    test("should get all items by expiry date with nearest expiry date first", () => {
+      return request(app)
+        .get("/api/homes/1/items")
+        .expect(200)
+        .then(({body}) => {
+          const { items } = body;
+          expect(items.length > 0).toBe(true)
+          for (let i = 1; i<items.length; i++) {
+            expect(items[i].expiry_date > items[i-1].expiry_date).toBe(true)
+          }
+        });
+    });
+  });
 
   describe("GET /expiries", () => {
     test("GET 200: sends an array of all expiries", () => {
@@ -357,6 +346,75 @@ describe("/api", () => {
           expiries.forEach((item) => {
             expect(typeof item.item_name).toBe("string");
             expect(typeof item.shelf_life).toBe("number");
+          });
+        });
+    });
+  });
+
+  describe("GET /expiries/:item_name", () => {
+    test("GET 200: sends an expiry based on provided item name", () => {
+      return request(app)
+        .get("/api/expiries/Milk")
+        .expect(200)
+        .then(({ body }) => {
+          const { expiry } = body;
+          expect(expiry.item_name).toBe("Milk");
+          expect(expiry.shelf_life).toBe(5);
+        });
+    });
+
+    test("GET 200: sends an expiry based on provided item name regardless of case sensitivity", () => {
+      return request(app)
+        .get("/api/expiries/milk")
+        .expect(200)
+        .then(({ body }) => {
+          const { expiry } = body;
+          expect(expiry.item_name).toBe("Milk");
+          expect(expiry.shelf_life).toBe(5);
+        });
+    });
+
+    test("GET 200: sends an expiry based on provided item name if item name is shortened version of item", () => {
+      return request(app)
+        .get("/api/expiries/pot")
+        .expect(200)
+        .then(({ body }) => {
+          const { expiry } = body;
+          expect(expiry.item_name).toBe("Potatoes");
+          expect(expiry.shelf_life).toBe(8);
+        });
+    });
+
+        test("GET 404: sends appropriate error status and message when given a valid but not existent item name to check", () => {
+          return request(app)
+            .get("/api/expiries/beans")
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).toBe("expiry item does not exist");
+            });
+        });
+
+
+
+  });
+
+  describe("GET /homes/:home_id/items?item_status=status_query", () => {
+    test("GET 200: Will accept a query parameter of status and return all the items for that status", () => {
+      return request(app)
+        .get("/api/homes/2/items?item_status=ACTIVE")
+        .expect(200)
+        .then(({ body }) => {
+          const { items } = body;
+          items.forEach((item) => {
+            expect(typeof item.item_id).toBe("number");
+            expect(typeof item.item_name).toBe("string");
+            expect(typeof item.item_price).toBe("number");
+            expect(typeof item.purchase_date).toBe("string");
+            expect(typeof item.expiry_date).toBe("string");
+            expect(typeof item.home_id).toBe("number");
+            expect(typeof item.item_status).toBe("string");
+            expect(item.home_id).toBe(2);
+            expect(item.item_status).toBe("ACTIVE");
           });
         });
     });

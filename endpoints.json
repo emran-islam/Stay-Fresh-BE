@@ -81,5 +81,18 @@
         "item_status": "USED"
       }
     }
+  },
+  "GET /api/expiries": {
+    "description": "serves up a json representation of all the available expiries",
+    "queries": [],
+    "requestFormat": {},
+    "exampleResponse": {
+      "items": [
+        {
+          "item_name": "Milk",
+          "shelf_life": 5
+        }
+      ]
+    }
   }
 }

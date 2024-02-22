@@ -10,6 +10,7 @@ type dataObject = {
     purchase_date: string;
     expiry_date: string;
     home_id: number;
+    item_status?: string;
   }[];
   expiriesData: { item_name: string; shelf_life: number }[];
 };
@@ -72,13 +73,14 @@ export default function seed(data: dataObject) {
     })
     .then(() => {
       const insertItemsQueryStr = format(
-        "INSERT INTO items (item_name, item_price, purchase_date, expiry_date, home_id) VALUES %L;",
+        "INSERT INTO items (item_name, item_price, purchase_date, expiry_date, home_id, item_status) VALUES %L;",
         data.itemsData.map((item) => [
           item.item_name,
           item.item_price,
           item.purchase_date,
           item.expiry_date,
           item.home_id,
+          item.item_status,
         ])
       );
       return connectionOne.query(insertItemsQueryStr);
