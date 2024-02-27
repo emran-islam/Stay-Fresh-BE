@@ -63,6 +63,14 @@ const items: {
     home_id: 2,
     item_status: "USED",
   },
+  {
+    item_name: "Bacon",
+    item_price: 110,
+    purchase_date: "Sun Feb 18 2024 19:33:50 GMT+0100",
+    expiry_date: "Tue Mar 19 2024 19:33:50 GMT+0100",
+    home_id: 2,
+    item_status: "TRASHED",
+  },
 ];
 
 export default items;

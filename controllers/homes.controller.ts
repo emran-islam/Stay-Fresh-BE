@@ -55,8 +55,6 @@ export function postHome(req, res, next) {
   const newHome = req.body;
   addHome(newHome)
     .then((home) => {
-      console.log(home);
-
       res.status(201).send({ home });
     })
     .catch((err) => {

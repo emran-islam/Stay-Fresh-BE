@@ -29,9 +29,10 @@ export function fetchItemsByHomeId(home_id, statusQuery) {
 
   let fetchItemsQuery = "SELECT * FROM items WHERE home_id = $1";
 
+
   if (statusQuery) {
     fetchItemsQuery += ` AND item_status=$2`;
-    queryArray.push(statusQuery);
+    queryArray.push(statusQuery.toUpperCase());
   }
   fetchItemsQuery += ` ORDER BY expiry_date ASC;`;
 
