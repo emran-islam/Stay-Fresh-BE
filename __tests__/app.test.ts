@@ -136,7 +136,7 @@ describe("/api", () => {
         .expect(201)
         .then(({ body }) => {
           const item = body.item;
-          expect(item.item_id).toBe(8);
+          expect(item.item_id).toBe(9);
           expect(item.item_name).toBe("cheese");
           expect(item.item_price).toBe(300);
           expect(item.purchase_date).toBe("2024-02-21T19:33:50.000Z");
@@ -402,6 +402,7 @@ describe("/api", () => {
         .expect(200)
         .then(({ body }) => {
           const { items } = body;
+          expect(items.length > 0).toBe(true);
           items.forEach((item) => {
             expect(typeof item.item_id).toBe("number");
             expect(typeof item.item_name).toBe("string");
@@ -415,6 +416,92 @@ describe("/api", () => {
           });
         });
     });
+
+    test("GET 200: Will accept a query parameter of status and return all the items for that status", () => {
+      return request(app)
+        .get("/api/homes/2/items?item_status=USED")
+        .expect(200)
+        .then(({ body }) => {
+          const { items } = body;
+          expect(items.length > 0).toBe(true)
+          items.forEach((item) => {
+            expect(typeof item.item_id).toBe("number");
+            expect(typeof item.item_name).toBe("string");
+            expect(typeof item.item_price).toBe("number");
+            expect(typeof item.purchase_date).toBe("string");
+            expect(typeof item.expiry_date).toBe("string");
+            expect(typeof item.home_id).toBe("number");
+            expect(typeof item.item_status).toBe("string");
+            expect(item.home_id).toBe(2);
+            expect(item.item_status).toBe("USED");
+          });
+        });
+    });
+
+        test("GET 200: Will accept a query parameter of status and return all the items for that status", () => {
+          return request(app)
+            .get("/api/homes/2/items?item_status=TRASHED")
+            .expect(200)
+            .then(({ body }) => {
+              const { items } = body;
+              expect(items.length > 0).toBe(true);
+              items.forEach((item) => {
+                expect(typeof item.item_id).toBe("number");
+                expect(typeof item.item_name).toBe("string");
+                expect(typeof item.item_price).toBe("number");
+                expect(typeof item.purchase_date).toBe("string");
+                expect(typeof item.expiry_date).toBe("string");
+                expect(typeof item.home_id).toBe("number");
+                expect(typeof item.item_status).toBe("string");
+                expect(item.home_id).toBe(2);
+                expect(item.item_status).toBe("TRASHED");
+              });
+            });
+        });
+
+         test("GET 200: Will accept a query parameter of status and return all the items for that status with lower case query params", () => {
+           return request(app)
+             .get("/api/homes/2/items?item_status=trashed")
+             .expect(200)
+             .then(({ body }) => {
+               const { items } = body;
+               expect(items.length > 0).toBe(true);
+               items.forEach((item) => {
+                 expect(typeof item.item_id).toBe("number");
+                 expect(typeof item.item_name).toBe("string");
+                 expect(typeof item.item_price).toBe("number");
+                 expect(typeof item.purchase_date).toBe("string");
+                 expect(typeof item.expiry_date).toBe("string");
+                 expect(typeof item.home_id).toBe("number");
+                 expect(typeof item.item_status).toBe("string");
+                 expect(item.home_id).toBe(2);
+                 expect(item.item_status).toBe("TRASHED");
+               });
+             });
+         });
+
+                  test("GET 200: Will accept a query parameter of status and return all the items for that status with lower case query params", () => {
+                    return request(app)
+                      .get("/api/homes/2/items?item_status=active")
+                      .expect(200)
+                      .then(({ body }) => {
+                        const { items } = body;
+                        expect(items.length > 0).toBe(true);
+                        items.forEach((item) => {
+                          expect(typeof item.item_id).toBe("number");
+                          expect(typeof item.item_name).toBe("string");
+                          expect(typeof item.item_price).toBe("number");
+                          expect(typeof item.purchase_date).toBe("string");
+                          expect(typeof item.expiry_date).toBe("string");
+                          expect(typeof item.home_id).toBe("number");
+                          expect(typeof item.item_status).toBe("string");
+                          expect(item.home_id).toBe(2);
+                          expect(item.item_status).toBe("ACTIVE");
+                        });
+                      });
+                  });
+
+
     test("GET 200: Will return empty array when given a valid status but home has no items of that status", () => {
       return request(app)
         .get("/api/homes/1/items?item_status=USED")
